@@ -6,7 +6,8 @@ A full-stack GenAI-powered job preparation platform built using MERN stack and G
 
 - Project setup completed
 - Backend initialization in progress
-- Authentication system coming next
+- Authentication systems implemented
+- Frontend implementation otw
 
 ## Tech Stack
 
