@@ -15,12 +15,14 @@ A full-stack GenAI-powered job preparation platform built using the MERN stack a
 ## Tech Stack
 
 **Frontend**
+
 - React
 - React Router DOM
 - Axios
 - SCSS
 
 **Backend**
+
 - Node.js
 - Express.js
 - MongoDB + Mongoose
@@ -28,12 +30,10 @@ A full-stack GenAI-powered job preparation platform built using the MERN stack a
 - JSON Web Tokens (JWT)
 
 **AI & File Handling**
+
 - Gemini AI (gemini-2.0-flash)
 - Multer (PDF upload)
 - pdf-parse (PDF text extraction)
-
-**Validation**
-- Zod
 
 ## Project Structure
 
@@ -41,42 +41,53 @@ A full-stack GenAI-powered job preparation platform built using the MERN stack a
 careerpilot/
 ├── backend/
 │   ├── src/
-│   │   ├── config/         # DB connection
-│   │   ├── controllers/    # Route handlers
-│   │   ├── middleware/      # Auth, Multer
-│   │   ├── models/         # Mongoose schemas
-│   │   ├── routes/         # API endpoints
-│   │   └── services/       # Gemini AI logic
+│   │   ├── config/             # DB connection
+│   │   ├── controllers/        # Route handlers
+│   │   ├── middleware/          # Auth, Multer
+│   │   ├── models/             # Mongoose schemas
+│   │   ├── routes/             # API endpoints
+│   │   └── services/           # Gemini AI logic
 │   └── server.js
 └── frontend/
-    ├── src/
-    │   ├── context/        # Auth context
-    │   ├── hooks/          # useAuth custom hook
-    │   ├── pages/          # Home, Login, Register, Interview
-    │   ├── services/       # API service layer
-    │   └── style/          # SCSS files
-    └── main.jsx
+    └── src/
+        ├── features/
+        │   ├── auth/
+        │   │   ├── components/  # Reusable auth components
+        │   │   ├── hooks/       # useAuth custom hook
+        │   │   ├── pages/       # Login, Register
+        │   │   ├── services/    # Auth API calls
+        │   │   └── auth.context.jsx  # Auth context
+        │   └── interview/
+        │       ├── context/     # Interview context
+        │       ├── hooks/       # useInterview custom hook
+        │       ├── pages/       # Home, Interview
+        │       └── services/    # Interview API calls
+        ├── app.routes.jsx       # Route definitions
+        ├── app.jsx              # App root
+        └── main.jsx             # Entry point
 ```
 
 ## API Endpoints
 
-| Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
-| POST | /api/auth/register | Register a new user | Public |
-| POST | /api/auth/login | Login user | Public |
-| GET | /api/auth/logout | Logout user | Private |
-| GET | /api/auth/get-me | Get logged in user | Private |
-| POST | /api/interview | Generate interview report | Private |
+| Method | Endpoint           | Description               | Access  |
+| ------ | ------------------ | ------------------------- | ------- |
+| POST   | /api/auth/register | Register a new user       | Public  |
+| POST   | /api/auth/login    | Login user                | Public  |
+| GET    | /api/auth/logout   | Logout user               | Private |
+| GET    | /api/auth/get-me   | Get logged in user        | Private |
+| POST   | /api/interview     | Generate interview report | Private |
 
 ## Getting Started
 
 **Clone the repository**
+
 ```bash
 git clone https://github.com/your-username/careerpilot-ai.git
 cd careerpilot-ai
 ```
 
 **Setup backend**
+
 ```bash
 cd backend
 npm install
@@ -86,6 +97,7 @@ npm run dev
 ```
 
 **Setup frontend**
+
 ```bash
 cd frontend
 npm install
