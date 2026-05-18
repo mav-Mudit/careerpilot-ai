@@ -1,7 +1,7 @@
-const { GoogleGenAI } = require("@google/genai");
+const OpenAI = require("openai");
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GOOGLE_API_KEY,
+const ai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 const responseSchema = {
@@ -60,32 +60,40 @@ async function generateInterviewReport({
   selfDescription,
   jobDescription,
 }) {
-  const prompt = `You are an expert technical interviewer. Analyze the candidate profile below and generate a structured interview report.
+  const trimmedResume = resume.replace(/\s+/g, " ").trim().slice(0, 6000);
 
-You MUST return a pure JSON object. Do NOT use @ symbols, backticks, or any separators. Return clean JSON only with these exact fields:
-- - title: short job title string, maximum 10 words, e.g. "Mid-Level Full Stack Engineer"
+  const prompt = `You are a senior technical interviewer with 10 years of experience.
+Carefully read the candidate's FULL resume and generate highly specific interview questions
+based on their ACTUAL projects, technologies and experience mentioned.
+
+Do NOT generate generic questions. Every technical question must reference something
+specific from their resume — a project name, a technology they used, or a decision they made.
+
+Return a pure JSON object with exactly these fields:
+- title: short job title string, maximum 10 words
 - matchScore: number between 0-100
-- technicalQuestions: array of objects with question, intention, answer
-- behavioralQuestions: array of objects with question, intention, answer
+- technicalQuestions: array of exactly 5 objects with question, intention, answer
+- behavioralQuestions: array of exactly 3 objects with question, intention, answer
 - skillGaps: array of objects with skill and severity (low/medium/high)
-- preparationPlan: array of objects with day, focus, tasks array
+- preparationPlan: array of exactly 5 objects with day, focus, tasks array (max 2 tasks per day)
 
-Resume: ${resume}
+Resume: ${trimmedResume}
 Self Description: ${selfDescription}
 Job Description: ${jobDescription}`;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: responseSchema,
-    },
-  });
+  try {
+    const response = await ai.chat.completions.create({
+      model: "gpt-5.4",
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" }, // ← simpler, more reliable
+    });
 
-  const raw = response.text.trim();
-  const parsed = JSON.parse(raw);
-  return parsed;
+    const parsed = JSON.parse(response.choices[0].message.content);
+    return parsed;
+  } catch (err) {
+    console.error("OpenAI response parsing failed:", err.message);
+    throw new Error("AI response parsing failed — please try again");
+  }
 }
 
 module.exports = generateInterviewReport;

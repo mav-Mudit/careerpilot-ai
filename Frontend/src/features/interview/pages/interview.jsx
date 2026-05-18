@@ -1,60 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../style/interview.scss";
-
-// ── Static mock data for UI development ──
-const report = {
-  matchScore: 92,
-  technicalQuestions: [
-    {
-      question:
-        "In your AI-Exam FORGE project, you set the temperature to 0.8. Why did you choose this for MCQ generation?",
-      intention:
-        "To verify the candidate's understanding of LLM hyperparameters.",
-      answer:
-        "Higher temperature increases variety but can cause formatting issues. Post-processing ensures structured output remains intact.",
-    },
-    {
-      question:
-        "How would you redesign your Flask API to handle multiple simultaneous users?",
-      intention:
-        "To test knowledge of backend scalability and handling long-latency AI operations.",
-      answer:
-        "Use a task queue like Celery/Redis or WebSockets to provide real-time updates while the LLM processes in the background.",
-    },
-  ],
-  behavioralQuestions: [
-    {
-      question:
-        "Describe a time there was a technical disagreement in your capstone project.",
-      intention: "To evaluate teamwork and conflict resolution skills.",
-      answer:
-        "Describe the specific conflict, communication method used, and the resulting compromise.",
-    },
-  ],
-  skillGaps: [
-    { skill: "Docker/Kubernetes", severity: "medium" },
-    { skill: "Unit Testing for AI", severity: "medium" },
-    { skill: "AWS/Azure/GCP", severity: "low" },
-  ],
-  preparationPlan: [
-    {
-      day: 1,
-      focus: "Advanced RAG and Vector Databases",
-      tasks: [
-        "Study different retrieval strategies beyond basic similarity search.",
-        "Review vector database options like Pinecone or Weaviate.",
-      ],
-    },
-    {
-      day: 2,
-      focus: "System Design and Scalability",
-      tasks: [
-        "Research architectural patterns for scaling LLM applications.",
-        "Practice designing RESTful systems that handle long-running tasks.",
-      ],
-    },
-  ],
-};
+import { useInterview } from "../hooks/useInterview.js";
+import { useParams } from "react-router";
 
 // ── Nav items ──
 const NAV_ITEMS = [
@@ -186,13 +133,35 @@ const RoadMapDay = ({ day }) => (
 // ── Main Component ──
 const Interview = () => {
   const [activeNav, setActiveNav] = useState("technical");
+  const { report, getReportById, loading } = useInterview();
+  const { interviewId } = useParams();
 
+  useEffect(() => {
+    if (interviewId) {
+      getReportById(interviewId);
+    }
+  }, [interviewId]);
+
+  if (loading || !report) {
+    return (
+      <main className="loading-screen">
+        <h1>Loading...</h1>
+      </main>
+    );
+  }
   const scoreColor =
     report.matchScore >= 75
       ? "score--high"
       : report.matchScore >= 50
         ? "score--mid"
         : "score--low";
+
+  const scoreText =
+    report.matchScore >= 75
+      ? "Strong match for this role"
+      : report.matchScore >= 50
+        ? "Moderate match for this role"
+        : "Needs significant improvement";
 
   return (
     <div className="interview-page">
@@ -289,7 +258,7 @@ const Interview = () => {
               <span className="match-score__value">{report.matchScore}</span>
               <span className="match-score__pct">%</span>
             </div>
-            <p className="match-score__sub">Strong match for this role</p>
+            <p className="match-score__sub">{scoreText}</p>
           </div>
 
           <div className="sidebar-divider" />
