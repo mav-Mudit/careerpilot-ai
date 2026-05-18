@@ -1,12 +1,12 @@
 # CareerPilot AI 🚀
 
-A full-stack GenAI-powered job preparation platform built using the MERN stack and Gemini AI. Users can upload their resumes, analyze job descriptions, detect skill gaps, and receive AI-generated interview questions with a personalized preparation plan.
+A full-stack GenAI-powered job preparation platform built using the MERN stack and OpenAI. Users can upload their resumes, analyze job descriptions, detect skill gaps, and receive AI-generated interview questions with a personalized preparation plan.
 
 ## Features
 
 - JWT-based authentication with secure HTTP-only cookies
 - PDF resume upload and parsing
-- AI-powered interview report generation using Gemini AI
+- AI-powered interview report generation using OpenAI GPT-4o
 - Skill gap detection with severity levels
 - Personalized day-wise preparation roadmap
 - Technical and behavioral interview questions tailored to the job description
@@ -31,9 +31,13 @@ A full-stack GenAI-powered job preparation platform built using the MERN stack a
 
 **AI & File Handling**
 
-- Gemini AI (gemini-2.0-flash)
+- OpenAI (gpt-5.4)
 - Multer (PDF upload)
 - pdf-parse (PDF text extraction)
+
+**Validation**
+
+- Zod
 
 ## Project Structure
 
@@ -46,36 +50,38 @@ careerpilot/
 │   │   ├── middleware/          # Auth, Multer
 │   │   ├── models/             # Mongoose schemas
 │   │   ├── routes/             # API endpoints
-│   │   └── services/           # Gemini AI logic
+│   │   └── services/           # OpenAI logic
 │   └── server.js
 └── frontend/
     └── src/
         ├── features/
         │   ├── auth/
-        │   │   ├── components/  # Reusable auth components
-        │   │   ├── hooks/       # useAuth custom hook
-        │   │   ├── pages/       # Login, Register
-        │   │   ├── services/    # Auth API calls
+        │   │   ├── components/       # Reusable auth components
+        │   │   ├── hooks/            # useAuth custom hook
+        │   │   ├── pages/            # Login, Register
+        │   │   ├── services/         # Auth API calls
         │   │   └── auth.context.jsx  # Auth context
         │   └── interview/
-        │       ├── context/     # Interview context
-        │       ├── hooks/       # useInterview custom hook
-        │       ├── pages/       # Home, Interview
-        │       └── services/    # Interview API calls
-        ├── app.routes.jsx       # Route definitions
-        ├── app.jsx              # App root
-        └── main.jsx             # Entry point
+        │       ├── context/          # Interview context
+        │       ├── hooks/            # useInterview custom hook
+        │       ├── pages/            # Home, Interview
+        │       └── services/         # Interview API calls
+        ├── app.routes.jsx            # Route definitions
+        ├── app.jsx                   # App root
+        └── main.jsx                  # Entry point
 ```
 
 ## API Endpoints
 
-| Method | Endpoint           | Description               | Access  |
-| ------ | ------------------ | ------------------------- | ------- |
-| POST   | /api/auth/register | Register a new user       | Public  |
-| POST   | /api/auth/login    | Login user                | Public  |
-| GET    | /api/auth/logout   | Logout user               | Private |
-| GET    | /api/auth/get-me   | Get logged in user        | Private |
-| POST   | /api/interview     | Generate interview report | Private |
+| Method | Endpoint                  | Description                | Access  |
+| ------ | ------------------------- | -------------------------- | ------- |
+| POST   | /api/auth/register        | Register a new user        | Public  |
+| POST   | /api/auth/login           | Login user                 | Public  |
+| GET    | /api/auth/logout          | Logout user                | Private |
+| GET    | /api/auth/get-me          | Get logged in user         | Private |
+| POST   | /api/interview            | Generate interview report  | Private |
+| GET    | /api/interview            | Get all interview reports  | Private |
+| GET    | /api/interview/report/:id | Get interview report by ID | Private |
 
 ## Getting Started
 
@@ -92,7 +98,7 @@ cd careerpilot-ai
 cd backend
 npm install
 cp .env.example .env
-# Add your MONGODB_URI, JWT_SECRET and GOOGLE_API_KEY to .env
+# Add your MONGODB_URI, JWT_SECRET and OPENAI_API_KEY to .env
 npm run dev
 ```
 
@@ -110,5 +116,5 @@ npm run dev
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-GOOGLE_API_KEY=your_gemini_api_key
+OPENAI_API_KEY=your_openai_api_key
 ```
