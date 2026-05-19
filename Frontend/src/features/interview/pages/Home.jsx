@@ -3,12 +3,20 @@ import { useInterview } from "../hooks/useInterview";
 import { useState } from "react";
 import { useRef } from "react";
 import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
 const Home = () => {
-  const { loading, generateReport } = useInterview();
+  const { loading, generateReport, reports, getReports } = useInterview();
   const [jobDescription, setJobDescription] = useState("");
   const [selfDescription, setSelfDescription] = useState("");
   const resumeInputRef = useRef();
+
+  const [fileName, setFileName] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) setFileName(file.name);
+  };
 
   const navigate = useNavigate();
 
@@ -23,11 +31,23 @@ const Home = () => {
     if (!data) return;
     navigate(`/interview/${data._id}`);
   };
+  useEffect(() => {
+    getReports();
+  }, []);
 
   if (loading) {
     return (
       <main className="loading-screen">
-        <h1>Loading....</h1>
+        <div className="loading-screen__content">
+          <div className="loading-screen__spinner" />
+          <h2 className="loading-screen__title">
+            Generating Your Interview Strategy
+          </h2>
+          <p className="loading-screen__sub">
+            Our AI is analyzing your profile against the job description. This
+            usually takes 15–30 seconds.
+          </p>
+        </div>
       </main>
     );
   }
@@ -125,22 +145,40 @@ const Home = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <polyline points="16 16 12 12 8 16" />
-                    <line x1="12" y1="12" x2="12" y2="21" />
-                    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                    {fileName ? (
+                      <polyline points="20 6 9 17 4 12" />
+                    ) : (
+                      <>
+                        <polyline points="16 16 12 12 8 16" />
+                        <line x1="12" y1="12" x2="12" y2="21" />
+                        <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                      </>
+                    )}
                   </svg>
                 </span>
-                <p className="dropzone__title">
-                  Click to upload or drag &amp; drop
-                </p>
-                <p className="dropzone__subtitle">PDF or DOCX (Max 5MB)</p>
+                {fileName ? (
+                  <>
+                    <p className="dropzone__title" style={{ color: "#3fb950" }}>
+                      ✓ {fileName}
+                    </p>
+                    <p className="dropzone__subtitle">Click to change file</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="dropzone__title">
+                      Click to upload or drag &amp; drop
+                    </p>
+                    <p className="dropzone__subtitle">PDF (Max 3MB)</p>
+                  </>
+                )}
                 <input
                   ref={resumeInputRef}
                   hidden
                   type="file"
                   id="resume"
                   name="resume"
-                  accept=".pdf,.docx"
+                  accept=".pdf"
+                  onChange={handleFileChange}
                 />
               </label>
             </div>
@@ -201,6 +239,33 @@ const Home = () => {
             </div>
           </div>
         </div>
+
+        {/* Recent Reports List */}
+        {reports.length > 0 && (
+          <section className="recent-reports">
+            <h2>My Recent Interview Plans</h2>
+            <ul className="reports-list">
+              {reports.map((report) => (
+                <li
+                  key={report._id}
+                  className="report-item"
+                  onClick={() => navigate(`/interview/${report._id}`)}
+                >
+                  <h3>{report.title || "Untitled Position"}</h3>
+                  <p className="report-meta">
+                    Generated on{" "}
+                    {new Date(report.createdAt).toLocaleDateString()}
+                  </p>
+                  <p
+                    className={`match-score ${report.matchScore >= 80 ? "score--high" : report.matchScore >= 60 ? "score--mid" : "score--low"}`}
+                  >
+                    Match Score: {report.matchScore}%
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* Card Footer */}
         <div className="interview-card__footer">
