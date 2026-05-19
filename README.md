@@ -1,43 +1,31 @@
-# CareerPilot AI 🚀
+# CareerPilot AI
 
-A full-stack GenAI-powered job preparation platform built using the MERN stack and OpenAI. Users can upload their resumes, analyze job descriptions, detect skill gaps, and receive AI-generated interview questions with a personalized preparation plan.
+A full-stack GenAI-powered job preparation platform built with the MERN stack and OpenAI GPT-4o. Upload your resume, paste a job description, and receive a personalized interview strategy — including skill gap analysis, match scoring, technical and behavioral questions, and a day-wise preparation roadmap.
+
+---
 
 ## Features
 
-- JWT-based authentication with secure HTTP-only cookies
-- PDF resume upload and parsing
-- AI-powered interview report generation using OpenAI GPT-4o
-- Skill gap detection with severity levels
-- Personalized day-wise preparation roadmap
-- Technical and behavioral interview questions tailored to the job description
+- JWT authentication with secure HTTP-only cookies
+- PDF resume upload and text extraction
+- AI-powered interview report generation via OpenAI GPT-4o
 - Match score between candidate profile and job description
+- Skill gap detection with severity levels (low / medium / high)
+- Tailored technical and behavioral interview questions
+- Personalized day-wise preparation roadmap
+- Dashboard showing all past interview reports
+
+---
 
 ## Tech Stack
 
-**Frontend**
+| Layer | Technologies |
+|-------|-------------|
+| Frontend | React, React Router DOM, Axios, SCSS |
+| Backend | Node.js, Express.js, MongoDB, Mongoose, JWT, bcryptjs |
+| AI & Files | OpenAI GPT-5.4, Multer, pdf-parse |
 
-- React
-- React Router DOM
-- Axios
-- SCSS
-
-**Backend**
-
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-- bcryptjs
-- JSON Web Tokens (JWT)
-
-**AI & File Handling**
-
-- OpenAI (gpt-5.4)
-- Multer (PDF upload)
-- pdf-parse (PDF text extraction)
-
-**Validation**
-
-- Zod
+---
 
 ## Project Structure
 
@@ -45,13 +33,13 @@ A full-stack GenAI-powered job preparation platform built using the MERN stack a
 careerpilot/
 ├── backend/
 │   ├── src/
-│   │   ├── config/             # DB connection
-│   │   ├── controllers/        # Route handlers
-│   │   ├── middleware/          # Auth, Multer
+│   │   ├── config/             # Database connection
+│   │   ├── controllers/        # Route handler logic
+│   │   ├── middleware/          # Auth and file upload middleware
 │   │   ├── models/             # Mongoose schemas
-│   │   ├── routes/             # API endpoints
-│   │   └── services/           # OpenAI logic
-│   └── server.js
+│   │   ├── routes/             # API route definitions
+│   │   └── services/           # OpenAI integration
+│   └── server.js               # Express app entry point
 └── frontend/
     └── src/
         ├── features/
@@ -60,9 +48,9 @@ careerpilot/
         │   │   ├── hooks/            # useAuth custom hook
         │   │   ├── pages/            # Login, Register
         │   │   ├── services/         # Auth API calls
-        │   │   └── auth.context.jsx  # Auth context
+        │   │   └── auth.context.jsx  # Auth context provider
         │   └── interview/
-        │       ├── context/          # Interview context
+        │       ├── context/          # Interview context provider
         │       ├── hooks/            # useInterview custom hook
         │       ├── pages/            # Home, Interview
         │       └── services/         # Interview API calls
@@ -71,38 +59,60 @@ careerpilot/
         └── main.jsx                  # Entry point
 ```
 
-## API Endpoints
+---
 
-| Method | Endpoint                  | Description                | Access  |
-| ------ | ------------------------- | -------------------------- | ------- |
-| POST   | /api/auth/register        | Register a new user        | Public  |
-| POST   | /api/auth/login           | Login user                 | Public  |
-| GET    | /api/auth/logout          | Logout user                | Private |
-| GET    | /api/auth/get-me          | Get logged in user         | Private |
-| POST   | /api/interview            | Generate interview report  | Private |
-| GET    | /api/interview            | Get all interview reports  | Private |
-| GET    | /api/interview/report/:id | Get interview report by ID | Private |
+## API Reference
+
+| Method | Endpoint | Description | Access |
+|--------|----------|-------------|--------|
+| POST | `/api/auth/register` | Register a new user | Public |
+| POST | `/api/auth/login` | Login user | Public |
+| GET | `/api/auth/logout` | Logout user | Private |
+| GET | `/api/auth/get-me` | Get logged in user | Private |
+| POST | `/api/interview` | Generate interview report | Private |
+| GET | `/api/interview` | Get all interview reports | Private |
+| GET | `/api/interview/report/:id` | Get interview report by ID | Private |
+
+---
 
 ## Getting Started
 
-**Clone the repository**
+### Prerequisites
+
+- Node.js v18+
+- MongoDB Atlas account
+- OpenAI API key
+
+### Installation
+
+**1. Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/careerpilot-ai.git
+git clone https://github.com/mav-Mudit/careerpilot-ai.git
 cd careerpilot-ai
 ```
 
-**Setup backend**
+**2. Setup backend**
 
 ```bash
 cd backend
 npm install
 cp .env.example .env
-# Add your MONGODB_URI, JWT_SECRET and OPENAI_API_KEY to .env
+```
+
+Add your credentials to `.env`:
+
+```
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+OPENAI_API_KEY=your_openai_api_key
+```
+
+```bash
 npm run dev
 ```
 
-**Setup frontend**
+**3. Setup frontend**
 
 ```bash
 cd frontend
@@ -110,11 +120,24 @@ npm install
 npm run dev
 ```
 
-## Environment Variables
+**4. Open in browser**
 
 ```
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-OPENAI_API_KEY=your_openai_api_key
+http://localhost:5173
 ```
+
+---
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secret key for signing JWT tokens |
+| `OPENAI_API_KEY` | OpenAI API key for GPT-4o |
+
+---
+
+## License
+
+MIT
