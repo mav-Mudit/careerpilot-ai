@@ -1,12 +1,16 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const app = express();
 
 app.use(express.json());
-app.use(cookieParser());
-app.use(cors({ origin: "https://careerpilot-ai-blond.vercel.app", credentials: true }));
+
+// ✅ CORS (no credentials needed anymore)
+app.use(
+  cors({
+    origin: "https://careerpilot-ai-blond.vercel.app",
+  })
+);
 
 const authRouter = require("./routes/auth.routes");
 const interviewRouter = require("./routes/interview.routes");
