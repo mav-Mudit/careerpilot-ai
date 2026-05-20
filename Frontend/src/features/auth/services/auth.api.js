@@ -2,7 +2,17 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: "https://careerpilot-ai-backend-24r3.onrender.com",
-  withCredentials: true,
+});
+
+// ✅ Automatically attach token to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
 export async function register({ username, email, password }) {
@@ -12,6 +22,12 @@ export async function register({ username, email, password }) {
       email,
       password,
     });
+
+    const token = response.data.token;
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+
     return response.data;
   } catch (err) {
     console.log(err);
@@ -24,19 +40,28 @@ export async function login({ email, password }) {
       email,
       password,
     });
+
+    const token = response.data.token;
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+
     return response.data;
   } catch (err) {
     console.log(err);
   }
 }
+
 export async function logout() {
   try {
     const response = await api.get("/api/auth/logout");
+    localStorage.removeItem("token");
     return response.data;
   } catch (err) {
     console.log(err);
   }
 }
+
 export async function getMe() {
   try {
     const response = await api.get("/api/auth/get-me");
