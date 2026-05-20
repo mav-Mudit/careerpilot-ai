@@ -1,6 +1,6 @@
 # CareerPilot AI
 
-A full-stack GenAI-powered job preparation platform built with the MERN stack and OpenAI GPT-4o. Upload your resume, paste a job description, and receive a personalized interview strategy — including skill gap analysis, match scoring, technical and behavioral questions, and a day-wise preparation roadmap.
+A full-stack GenAI-powered job preparation platform built with the MERN stack and OpenAI GPT-5.4. Upload your resume, paste a job description, and receive a personalized interview strategy — including skill gap analysis, match scoring, technical and behavioral questions, and a day-wise preparation roadmap.
 
 ---
 
