@@ -17,7 +17,6 @@ async function registerUserController(req, res) {
       .json({ message: "Username, email and password are required" });
   }
 
-  //   Check if user already exists by email or username
   const isUserAlreadyExists = await userModel.findOne({
     $or: [{ email }, { username }],
   });
@@ -44,17 +43,13 @@ async function registerUserController(req, res) {
     process.env.JWT_SECRET,
     {
       expiresIn: "1d",
-    },
+    }
   );
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/",
-});
 
+  
   res.status(201).json({
     message: "User registered successfully",
+    token,
     user: {
       id: user._id,
       username: user.username,
@@ -91,16 +86,13 @@ async function loginUserController(req, res) {
     process.env.JWT_SECRET,
     {
       expiresIn: "1d",
-    },
+    }
   );
- res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/",
-});
+
+ 
   res.status(200).json({
     message: "User logged in successfully",
+    token,
     user: {
       id: user._id,
       username: user.username,
@@ -111,24 +103,21 @@ async function loginUserController(req, res) {
 
 /**
  * @name GET logoutUserController
- * @description logout a user by blacklisting the token, expects the token in the cookies
+ * @description logout a user by blacklisting the token from Authorization header
  * @access Public
  */
 async function logoutUserController(req, res) {
-  const token = req.cookies.token;
+  const authHeader = req.headers.authorization;
 
-  if (token) {
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+
     await tokenBlacklistModel.create({ token });
   }
 
- res.clearCookie("token", {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  path: "/"
-})
   res.status(200).json({ message: "User logged out successfully" });
 }
+
 /**
  * @name GET getMeController
  * @description get the currently logged in user's information
@@ -144,8 +133,9 @@ async function getMeController(req, res) {
       username: user.username,
       email: user.email,
     },
-  })
+  });
 }
+
 module.exports = {
   registerUserController,
   loginUserController,
