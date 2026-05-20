@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://careerpilot-ai-backend-i3xo.onrender.com",
+  baseURL: "https://careerpilot-ai-backend-24r3.onrender.com",
   withCredentials: true,
 });
 
