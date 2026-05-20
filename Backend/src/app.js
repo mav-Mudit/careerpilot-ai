@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "https://careerpilot-ai-rho.vercel.app", credentials: true }));
+app.use(cors({ origin: "https://careerpilot-ai-blond.vercel.app", credentials: true }));
 
 const authRouter = require("./routes/auth.routes");
 const interviewRouter = require("./routes/interview.routes");
