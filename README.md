@@ -134,7 +134,7 @@ http://localhost:5173
 |----------|-------------|
 | `MONGODB_URI` | MongoDB Atlas connection string |
 | `JWT_SECRET` | Secret key for signing JWT tokens |
-| `OPENAI_API_KEY` | OpenAI API key for GPT-4o |
+| `OPENAI_API_KEY` | OpenAI API key |
 
 ---
 
