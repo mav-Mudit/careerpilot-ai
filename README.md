@@ -10,7 +10,7 @@ A full-stack GenAI-powered job preparation platform built with the MERN stack an
 - PDF resume upload and text extraction
 - AI-powered interview report generation via OpenAI GPT-4o
 - Match score between candidate profile and job description
-- Skill gap detection with severity levels (low / medium / high)
+- Skill gap detection with severity levels (low/medium/high)
 - Tailored technical and behavioral interview questions
 - Personalized day-wise preparation roadmap
 - Dashboard showing all past interview reports
@@ -137,7 +137,3 @@ http://localhost:5173
 | `OPENAI_API_KEY` | OpenAI API key |
 
 ---
-
-## License
-
-MIT
